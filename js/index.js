@@ -5,6 +5,8 @@ const url = "https://api.pexels.com/v1/search?query=";
 const addressBarContent = new URLSearchParams(location.search);
 const query = addressBarContent.get("query");
 
+const value = query ? query : "";
+
 const getImages = (value) => {
   fetch(url + value, {
     headers: { Authorization: apiKey }
@@ -29,7 +31,6 @@ const getImages = (value) => {
         cardImg.onclick = () => {
           location.href = `./details.html?id=${image.id}&query=${value}`;
         };
-        console.dir(cards[i]);
         const title = cards[i].querySelector("h5");
         title.style.cursor = "pointer";
         title.onclick = () => {
@@ -41,6 +42,13 @@ const getImages = (value) => {
         btn.onclick = () => {
           cards[i].closest(".col-md-4").remove();
         };
+        const viewBtns = cards[i].querySelectorAll(".btn-group > button:nth-of-type(1)");
+        viewBtns.forEach((btn) => {
+          btn.onclick = () => {
+            const modal = document.querySelector(".modal-body");
+            modal.innerHTML = `<img class="w-100" src="${image.src.large}" alt="${image.alt}"/>`;
+          };
+        });
         cards[i].querySelector(".text-muted").innerText = "ID: " + image.id;
       });
     })
@@ -48,6 +56,10 @@ const getImages = (value) => {
       console.log(err);
     });
 };
+
+if (query) {
+  getImages(query);
+}
 
 const primaryBtn = document.querySelector(".btn-primary");
 primaryBtn.onclick = (event) => {
