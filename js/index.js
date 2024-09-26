@@ -8,6 +8,7 @@ const query = addressBarContent.get("query");
 const value = query ? query : "";
 
 const getImages = (value) => {
+  document.querySelector(".album").classList.add("d-block");
   fetch(url + value, {
     headers: { Authorization: apiKey }
   })
@@ -23,15 +24,21 @@ const getImages = (value) => {
       imagesArray.push(...data.photos);
       // manipolo il DOM
       const wrapper = document.querySelector(".album .row");
+      wrapper.classList.add("g-3");
       imagesArray.forEach((image, i) => {
         const cards = document.querySelectorAll(".card");
+        cards[i].classList.add("h-100");
+        cards[i].querySelector(".card-body").classList.add("d-flex", "flex-column", "justify-content-between");
         const cardImg = cards[i].querySelector("img");
+        cardImg.style.height = "350px";
+        cardImg.style.objectFit = "cover";
         cardImg.style.cursor = "pointer";
         cardImg.src = image.src.medium;
         cardImg.onclick = () => {
           location.href = `./details.html?id=${image.id}&query=${value}`;
         };
         const title = cards[i].querySelector("h5");
+        title.classList.add("mb-3");
         title.style.cursor = "pointer";
         title.onclick = () => {
           location.href = `./details.html?id=${image.id}&query=${value}`;
